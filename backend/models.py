@@ -1,0 +1,31 @@
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+db = SQLAlchemy()
+
+class Persona(db.Model):
+    __tablename__ = 'personas'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    tipo_documento = db.Column(db.String(50), nullable=False)
+    documento = db.Column(db.String(50), nullable=False, unique=True)
+    nombres = db.Column(db.String(100), nullable=False)
+    apellidos = db.Column(db.String(100), nullable=False)
+    hobbie = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'tipo_documento': self.tipo_documento,
+            'documento': self.documento,
+            'nombres': self.nombres,
+            'apellidos': self.apellidos,
+            'hobbie': self.hobbie,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+    
+    def __repr__(self):
+        return f'<Persona {self.nombres} {self.apellidos}>'
